@@ -4,7 +4,7 @@ from database_services.RDBService import RDBService
 class UserRDBService(RDBService):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     @classmethod
     def get_user_and_address(cls, template):

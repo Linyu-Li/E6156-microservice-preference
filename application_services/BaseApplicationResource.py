@@ -20,19 +20,19 @@ class BaseApplicationResource(ABC):
 
     @classmethod
     @abstractmethod
-    def get_links(self, resource_data):
+    def get_links(cls, resource_data):
         pass
 
     @classmethod
     @abstractmethod
-    def get_data_resource_info(self):
+    def get_data_resource_info(cls):
         pass
 
 
 class BaseRDBApplicationResource(BaseApplicationResource):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     @classmethod
     def get_by_template(cls, template):
@@ -43,10 +43,10 @@ class BaseRDBApplicationResource(BaseApplicationResource):
 
     @classmethod
     @abstractmethod
-    def get_links(self, resource_data):
+    def get_links(cls, resource_data):
         pass
 
     @classmethod
     @abstractmethod
-    def get_data_resource_info(self):
+    def get_data_resource_info(cls):
         pass

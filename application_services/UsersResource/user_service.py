@@ -1,5 +1,5 @@
 from application_services.BaseApplicationResource import BaseRDBApplicationResource
-# import database_services.RDBService as d_service
+import database_services.RDBService as d_service
 
 
 class UserResource(BaseRDBApplicationResource):
@@ -13,4 +13,4 @@ class UserResource(BaseRDBApplicationResource):
 
     @classmethod
     def get_data_resource_info(cls):
-        return 'users', 'users'
+        return 'aaaaaF21E6156', 'users'
