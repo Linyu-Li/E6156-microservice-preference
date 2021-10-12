@@ -35,10 +35,10 @@ class BaseRDBApplicationResource(BaseApplicationResource):
         super().__init__()
 
     @classmethod
-    def get_by_template(cls, template):
+    def get_by_template(cls, template, field_list=None):
         db_name, table_name = cls.get_data_resource_info()
-        res = RDBService.find_by_template(db_name, table_name,
-                                          template, None)
+        res = RDBService.find_by_template(
+            db_name, table_name, template, field_list)
         return res
 
     @classmethod

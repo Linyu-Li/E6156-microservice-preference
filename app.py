@@ -2,11 +2,11 @@ from flask import Flask, Response, request
 from flask_cors import CORS
 import json
 import logging
-from datetime import datetime
+# from datetime import datetime
 
-import utils.rest_utils as rest_utils
+# import utils.rest_utils as rest_utils
 
-from application_services.UsersResource.user_service import UserResource
+from application_services.pref_resource import UserHobbyResource
 from database_services.RDBService import RDBService as RDBService
 
 logging.basicConfig(level=logging.DEBUG)
@@ -17,32 +17,45 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/users', methods=['GET', 'POST'])
-def user_collection():
+@app.route('/hobby/<user_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def user_hobbies(user_id):
     """
-    1. HTTP GET return all users.
-    2. HTTP POST with body --> create a user, i.e --> database.
-    :return:
+    Reads, edits or deletes user hobby records.
+
+    Args:
+        user_id (int): ID of the user.
+
+    Returns:
+        response (Response): HTTP response
+
     """
-    res = UserResource.get_by_template(None)
+    args_dict = request.get_json()  # args passed via raw json in body
+    if request.method == 'GET':
+        res = [ret['hobby'] for ret in UserHobbyResource.get_hobby(user_id=user_id)]
+    elif request.method == 'POST':
+        hobbies = args_dict.get('hobbies', [])
+        res = sum([UserHobbyResource.insert_hobby(user_id=user_id, hobby=hobby)
+                   for hobby in hobbies])
+    elif request.method == 'PUT':
+        hobby_old = args_dict.get('hobbyOld', None)
+        hobby_new = args_dict.get('hobbyNew', None)
+        if hobby_old and hobby_new:
+            res = UserHobbyResource.edit_hobby(
+                user_id=user_id, hobby_old=hobby_old, hobby_new=hobby_new)
+        else:
+            res = 0
+    elif request.method == 'DELETE':
+        hobbies = args_dict.get('hobbies', [])
+        res = sum([UserHobbyResource.delete_hobby(user_id=user_id, hobby=hobby)
+                   for hobby in hobbies])
+    else:
+        res = 0
     return Response(json.dumps(res, default=str), status=200, content_type="application/json")
-
-
-@app.route('/users/<user_id>', methods=['GET', 'PUT', 'DELETE'])
-def specific_user(user_id):
-    """
-    1. Get a specific one by ID.
-    2. Update body and update.
-    3. Delete would ID and delete it.
-    :param user_id:
-    :return:
-    """
-    pass
 
 
 @app.route('/<db_schema>/<table_name>/<column_name>/<prefix>')
 def get_by_prefix(db_schema, table_name, column_name, prefix):
-    res = RDBService.get_by_prefix(db_schema, table_name, column_name, prefix)
+    res = RDBService.find_by_prefix(db_schema, table_name, column_name, prefix)
     rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
     return rsp
 

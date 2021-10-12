@@ -1,0 +1,1 @@
+from .user_hobby_resource import UserHobbyResource

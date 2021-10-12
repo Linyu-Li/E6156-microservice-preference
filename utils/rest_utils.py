@@ -7,10 +7,7 @@ from datetime import datetime
 logger = logging.getLogger()
 
 
-
-
 class RESTContext:
-
     _default_limit = 10
 
     @classmethod
@@ -100,7 +97,6 @@ class RESTContext:
         result = json.dumps(result, indent=2)
         return result
 
-
     @classmethod
     def _get_and_remove_arg(cls, args, arg_name):
         val = copy.copy(args.get(arg_name, None))
@@ -110,14 +106,10 @@ class RESTContext:
         return args, val
 
 
-
-
-
 # 1. Extract the input information from the requests object.
 # 2. Log the information
 # 3. Return extracted information.
 #
-
 
 
 def log_response(method, status, data, txt):
@@ -132,7 +124,6 @@ def log_response(method, status, data, txt):
 
 
 def log_request(method_name, request_context):
-
     info = {
         "method_name": method_name,
         "request": request_context
@@ -143,6 +134,5 @@ def log_request(method_name, request_context):
 
 
 def split_key_string(s):
-
     result = s.split("_")
     return result
