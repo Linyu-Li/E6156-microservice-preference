@@ -1,1 +1,1 @@
-from .user_hobby_resource import UserHobbyResource
+from .user_profile import UserProfileResource
