@@ -17,42 +17,42 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/hobby/<id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def user_profile(id):
+@app.route('/profile', methods=['POST'])
+def new_user_profile():
+    # args passed via raw json in body
+    profile = request.get_json().get('profile', {})
+    if profile:
+        res = UserProfileResource.insert_profile(**profile)
+    else:
+        res = -1
+    return Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+
+@app.route('/profile/<profile_id>', methods=['GET', 'PUT', 'DELETE'])
+def user_profile(profile_id):
     """
     Reads, edits or deletes user profile records.
 
     Args:
-        id (int): ID of the user profile.
+        profile_id (int): ID of the user profile.
 
     Returns:
         response (Response): HTTP response
 
     """
-    args_dict = request.get_json()  # args passed via raw json in body
     if request.method == 'GET':
-        res = [ret['movie', 'hobby', 'book', 'music', 'sports', 'major'] for ret in UserProfileResource.get_profile(id=id)]
-
-    elif request.method == 'POST':
-        profile = args_dict.get('profile', [])
-        res = UserProfileResource.insert_profile(id=id, hobby=hobby)
-
+        res = UserProfileResource.get_profile(id=profile_id)
     elif request.method == 'PUT':
-        hobby_old = args_dict.get('hobbyOld', None)
-        hobby_new = args_dict.get('hobbyNew', None)
-        if hobby_old and hobby_new:
-            res = UserProfileResource.edit_hobby(
-                id=id, hobby_old=hobby_old, hobby_new=hobby_new)
+        # args passed via raw json in body
+        profile = request.get_json().get('profile', {})
+        if profile:
+            res = UserProfileResource.update_profile(id=profile_id, **profile)
         else:
             res = 0
-
     elif request.method == 'DELETE':
-        profile = args_dict.get('profile', [])
-        res = UserProfileResource.delete_profile(id=id)
-
+        res = UserProfileResource.delete_profile(id=profile_id)
     else:
         res = 0
-
     return Response(json.dumps(res, default=str), status=200, content_type="application/json")
 
 

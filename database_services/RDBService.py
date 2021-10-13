@@ -28,7 +28,8 @@ class RDBService:
     def run_sql(cls,
                 sql_statement: str,
                 args: Union[Tuple, List, Dict] = None,
-                fetch: bool = False):
+                fetch: bool = False,
+                last_id: bool = False):
         conn = RDBService._get_db_connection()
         try:
             cur = conn.cursor()
@@ -36,6 +37,8 @@ class RDBService:
             res = cur.execute(sql_statement, args=args)
             if fetch:
                 res = cur.fetchall()
+            if last_id:
+                res = cur.lastrowid
         except Exception as e:
             conn.close()
             logger.error(e)
@@ -60,7 +63,7 @@ class RDBService:
                          template: Dict,
                          field_list: List):
         wc, args = RDBService.get_where_clause_args(template)
-        fields = ",".join(field_list) if field_list else "*"
+        fields = ", ".join(field_list) if field_list else "*"
         sql = "select {} from {}.{}{}".format(
             fields, db_schema, table_name, wc)
         return RDBService.run_sql(sql, args, fetch=True)
@@ -72,11 +75,14 @@ class RDBService:
                            template: Dict,
                            field_update: Dict):
         wc, args = RDBService.get_where_clause_args(template)
-        field_update = ",".join(
-            "{} = {}".format(k, v) for k, v in field_update.items())
+        field_clauses, field_vals = [], []
+        for k, v in field_update.items():
+            field_clauses.append("{} = %s".format(k))
+            field_vals.append(v)
+        field_update = ", ".join(field_clauses)
         sql = "update {}.{} set {}{}".format(
             db_schema, table_name, field_update, wc)
-        return RDBService.run_sql(sql, args)
+        return RDBService.run_sql(sql, field_vals + args)
 
     @classmethod
     def delete_by_template(cls,
@@ -97,11 +103,11 @@ class RDBService:
             cols.append(k)
             vals.append('%s')
             args.append(v)
-        cols_clause = "(" + ",".join(cols) + ")"
-        vals_clause = "values (" + ",".join(vals) + ")"
+        cols_clause = "(" + ", ".join(cols) + ")"
+        vals_clause = "values (" + ", ".join(vals) + ")"
         sql = "insert into {}.{}{} {}".format(
             db_schema, table_name, cols_clause, vals_clause)
-        return RDBService.run_sql(sql, args)
+        return RDBService.run_sql(sql, args, last_id=True)
 
     @classmethod
     def find_by_prefix(cls,
@@ -110,7 +116,7 @@ class RDBService:
                        column_name: str,
                        value_prefix: str,
                        field_list: List = None):
-        fields = ",".join(field_list) if field_list else "*"
+        fields = ", ".join(field_list) if field_list else "*"
         sql = "select {} from {}.{} where {} like '{}%'".format(
             fields, db_schema, table_name, column_name, value_prefix)
         return RDBService.run_sql(sql, fetch=True)

@@ -21,8 +21,10 @@ class UserProfileResource(BaseRDBApplicationResource):
         return RDBService.create(cls.db_name, cls.table_name, kwargs)
 
     @classmethod
-    def edit_profile(cls, **kwargs):
-        return RDBService.update_by_template(cls.db_name, cls.table_name, kwargs)
+    def update_profile(cls, **kwargs):
+        profile_id = kwargs.pop('id')
+        return RDBService.update_by_template(
+            cls.db_name, cls.table_name, {'id': profile_id}, kwargs)
 
     @classmethod
     def delete_profile(cls, **kwargs):
