@@ -1,4 +1,4 @@
-# User preference microservice
+# LionMatch User preference microservice
 
 ## Environment config
 - Install dependencies: `pip3 install -r requirements.txt`
