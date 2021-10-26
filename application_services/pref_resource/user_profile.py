@@ -14,7 +14,8 @@ class UserProfileResource(BaseRDBApplicationResource):
 
     @classmethod
     def get_profile(cls, **kwargs) -> List:
-        return RDBService.find_by_template(cls.db_name, cls.table_name, kwargs, ['movie', 'hobby', 'book', 'music', 'sports', 'major'])
+        return RDBService.find_by_template(cls.db_name, cls.table_name, kwargs,
+                                           ['movie', 'hobby', 'book', 'music', 'sport', 'major', 'orientation'])
 
     @classmethod
     def insert_profile(cls, **kwargs):
