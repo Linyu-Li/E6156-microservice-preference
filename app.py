@@ -22,10 +22,16 @@ def new_user_profile():
     # args passed via raw json in body
     profile = request.get_json().get('profile', {})
     if profile:
-        res = UserProfileResource.insert_profile(**profile)
+        try:
+            res = UserProfileResource.insert_profile(**profile)
+            status_code = 201
+        except Exception as e:
+            res = 'Database error: {}'.format(str(e))
+            status_code = 422
     else:
-        res = -1
-    return Response(json.dumps(res, default=str), status=200, content_type="application/json")
+        res = 'New profile cannot be empty!'
+        status_code = 400
+    return Response(json.dumps(res, default=str), status=status_code, content_type="application/json")
 
 
 @app.route('/profile/<profile_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -42,18 +48,24 @@ def user_profile(profile_id):
     """
     if request.method == 'GET':
         res = UserProfileResource.get_profile(id=profile_id)
+        if len(res):
+            status_code = 200
+        else:
+            res = 'Resource not found!'
+            status_code = 404
     elif request.method == 'PUT':
         # args passed via raw json in body
         profile = request.get_json().get('profile', {})
         if profile:
             res = UserProfileResource.update_profile(id=profile_id, **profile)
+            status_code = 200
         else:
-            res = 0
-    elif request.method == 'DELETE':
+            res = 'New profile cannot be empty!'
+            status_code = 400
+    else:  # elif request.method == 'DELETE':
         res = UserProfileResource.delete_profile(id=profile_id)
-    else:
-        res = 0
-    return Response(json.dumps(res, default=str), status=200, content_type="application/json")
+        status_code = 204
+    return Response(json.dumps(res, default=str), status=status_code, content_type="application/json")
 
 
 @app.route('/<db_schema>/<table_name>/<column_name>/<prefix>')
