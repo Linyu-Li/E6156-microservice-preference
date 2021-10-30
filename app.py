@@ -31,7 +31,7 @@ def new_user_profile():
     else:
         res = 'New profile cannot be empty!'
         status_code = 400
-    return Response(json.dumps(res, default=str), status=status_code, content_type="application/json")
+    return Response(f"{status_code} - {res}", status=status_code, mimetype="application/json")
 
 
 @app.route('/profile/<profile_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -65,7 +65,7 @@ def user_profile(profile_id):
     else:  # elif request.method == 'DELETE':
         res = UserProfileResource.delete_profile(id=profile_id)
         status_code = 204
-    return Response(json.dumps(res, default=str), status=status_code, content_type="application/json")
+    return Response(f"{status_code} - {res}", status=status_code, mimetype="application/json")
 
 
 @app.route('/<db_schema>/<table_name>/<column_name>/<prefix>')
