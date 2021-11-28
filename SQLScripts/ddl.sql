@@ -1,3 +1,5 @@
+drop schema if exists user_pref;
+create schema user_pref;
 use user_pref;
 
 drop table if exists user_profile;
