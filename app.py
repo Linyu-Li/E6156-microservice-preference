@@ -55,8 +55,8 @@ def user_profile(profile_id):
             status_code = 404
     elif request.method == 'PUT':
         # args passed via raw json in body
-        profile = request.get_json().get('profile', {})
-        if profile:
+        profile = request.get_json()
+        if len(profile):
             res = UserProfileResource.update_profile(id=profile_id, **profile)
             status_code = 200
         else:
