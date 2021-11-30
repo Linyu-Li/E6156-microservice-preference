@@ -19,10 +19,16 @@ def get_db_info():
             "cursorclass": DictCursor
         }
     else:
+        # db_info = {
+        #     "host": "localhost",
+        #     "user": "admin",
+        #     "password": "6156password",
+        #     "cursorclass": DictCursor
+        # }
         db_info = {
             "host": "localhost",
-            "user": "admin",
-            "password": "6156password",
+            "user": "root",
+            "password": "root123456",
             "cursorclass": DictCursor
         }
 

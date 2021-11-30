@@ -107,7 +107,7 @@ class RDBService:
         vals_clause = "values (" + ", ".join(vals) + ")"
         sql = "insert into {}.{}{} {}".format(
             db_schema, table_name, cols_clause, vals_clause)
-        return RDBService.run_sql(sql, args, last_id=True)
+        return RDBService.run_sql(sql, args)
 
     @classmethod
     def find_by_prefix(cls,

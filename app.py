@@ -20,16 +20,21 @@ CORS(app)
 @app.route('/profile', methods=['POST'])
 def new_user_profile():
     # args passed via raw json in body
-    profile = request.get_json().get('profile', {})
-    if profile:
+    profile = request.get_json()
+    if profile and 'id' in profile:
         try:
-            res = UserProfileResource.insert_profile(**profile)
-            status_code = 201
+            ret = UserProfileResource.insert_profile(**profile)
+            if ret:
+                res = 'Profile created!'
+                status_code = 201
+            else:
+                res = 'Failed to create the profile!'
+                status_code = 422
         except Exception as e:
             res = 'Database error: {}'.format(str(e))
             status_code = 422
     else:
-        res = 'New profile cannot be empty!'
+        res = 'New profile cannot be empty or without an ID!'
         status_code = 400
     return Response(f"{status_code} - {res}", status=status_code, mimetype="application/json")
 

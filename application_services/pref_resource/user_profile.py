@@ -8,6 +8,7 @@ class UserProfileResource(BaseRDBApplicationResource):
     db_name = "user_pref"
     table_name = "user_profile"
     table_str = db_name + "." + table_name
+    fields = {'id', 'movie', 'hobby', 'book', 'music', 'sport', 'major', 'orientation'}
 
     def __init__(self):
         super().__init__()
@@ -19,11 +20,17 @@ class UserProfileResource(BaseRDBApplicationResource):
 
     @classmethod
     def insert_profile(cls, **kwargs):
+        for k in list(kwargs.keys()):
+            if k not in cls.fields:
+                del kwargs[k]
         return RDBService.create(cls.db_name, cls.table_name, kwargs)
 
     @classmethod
     def update_profile(cls, **kwargs):
         profile_id = kwargs.pop('id')
+        for k in list(kwargs.keys()):
+            if k not in cls.fields:
+                del kwargs[k]
         return RDBService.update_by_template(
             cls.db_name, cls.table_name, {'id': profile_id}, kwargs)
 
