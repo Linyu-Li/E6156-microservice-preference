@@ -18,6 +18,6 @@ create table user_profile
     CONSTRAINT pk_user_profile PRIMARY KEY (ID)
 );
 
-insert into user_profile (id, movie, hobby, book, music, sport, major)
-values (10000, 'Guardians of the Galaxy', 'Anime', NULL, 'Pop', 'Basketball', 'CS'),
-       (10001, 'Harry Potter', 'Skateboarding', 'The Swallows', 'Rock', 'Hockey', 'Math');
+-- insert into user_profile (id, movie, hobby, book, music, sport, major)
+-- values (10000, 'Guardians of the Galaxy', 'Anime', NULL, 'Pop', 'Basketball', 'CS'),
+--        (10001, 'Harry Potter', 'Skateboarding', 'The Swallows', 'Rock', 'Hockey', 'Math');
