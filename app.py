@@ -17,7 +17,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/profile', methods=['POST'])
+@app.route('/api/profile', methods=['POST'])
 def new_user_profile():
     # args passed via raw json in body
     profile = request.get_json()
@@ -39,7 +39,7 @@ def new_user_profile():
     return Response(f"{status_code} - {res}", status=status_code, mimetype="application/json")
 
 
-@app.route('/profile/<profile_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/api/profile/<profile_id>', methods=['GET', 'PUT', 'DELETE'])
 def user_profile(profile_id):
     """
     Reads, edits or deletes user profile records.
@@ -71,13 +71,6 @@ def user_profile(profile_id):
         res = UserProfileResource.delete_profile(id=profile_id)
         status_code = 204
     return Response(f"{status_code} - {res}", status=status_code, mimetype="application/json")
-
-
-@app.route('/<db_schema>/<table_name>/<column_name>/<prefix>')
-def get_by_prefix(db_schema, table_name, column_name, prefix):
-    res = RDBService.find_by_prefix(db_schema, table_name, column_name, prefix)
-    rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
-    return rsp
 
 
 if __name__ == '__main__':
