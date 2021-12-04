@@ -21,3 +21,9 @@ create table user_profile
 -- insert into user_profile (id, movie, hobby, book, music, sport, major)
 -- values (10000, 'Guardians of the Galaxy', 'Anime', NULL, 'Pop', 'Basketball', 'CS'),
 --        (10001, 'Harry Potter', 'Skateboarding', 'The Swallows', 'Rock', 'Hockey', 'Math');
+
+insert into user_pref.user_profile (id, movie, hobby, book, music, sport, major, orientation)
+values (1, 'Guardians of the Galaxy', 'Reading', 'Trick Mirror', 'Take On Me', 'Basketball', 'Computer Science', 'Male');
+
+insert into user_pref.user_profile (id, movie, hobby, book, music, sport, major, orientation)
+values (2, 'Harry Potter', 'Anime', 'The Swallows', 'Pop', 'Swimming', 'Math', 'Female');
