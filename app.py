@@ -54,7 +54,7 @@ def user_profile(profile_id):
     if request.method == 'GET':
         res = UserProfileResource.get_profile(id=profile_id)
         if len(res):
-            status_code = 200
+            return Response(json.dumps(res[0], default=str), status=200, content_type="application/json")
         else:
             res = 'Resource not found!'
             status_code = 404
